@@ -1,5 +1,6 @@
 package peaksoft.springbootapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "companies1")
@@ -27,5 +29,7 @@ public class Company {
     private String directorName;
     @CreatedDate
     private LocalDate localDate;
-
+    @OneToMany(cascade = CascadeType.ALL , mappedBy = "company")
+    @JsonIgnore
+    private List<Course> courses;
 }

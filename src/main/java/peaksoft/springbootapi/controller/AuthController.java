@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import peaksoft.springbootapi.dto.*;
 import peaksoft.springbootapi.entity.User;
 import peaksoft.springbootapi.repository.UserRepository;
-import peaksoft.springbootapi.security.jwt.JwtTokenFilter;
 import peaksoft.springbootapi.security.jwt.JwtTokenUtil;
-import peaksoft.springbootapi.service.UserService;
 
 @RestController
 @RequestMapping("/api/jwt")

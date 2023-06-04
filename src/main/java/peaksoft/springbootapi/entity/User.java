@@ -24,13 +24,18 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String userName;
     private String firstName;
     private String lastName;
     private String email;
     private String password;
+    @OneToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @JoinColumn(name = "course_id")
+    private Course course;
+    @ManyToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "group_id")
+    private Group group;
     @CreatedDate
-    private LocalDate localDate;
+    private LocalDate createdDate;
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -43,7 +48,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return firstName;
     }
 
 

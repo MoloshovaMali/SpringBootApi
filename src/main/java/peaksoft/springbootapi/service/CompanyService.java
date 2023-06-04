@@ -75,7 +75,7 @@ public class CompanyService {
     }
 
     public CompanyResponseView searchAndPagination(String text, int page, int size) {
-        Pageable pageable = (Pageable) PageRequest.of(page - 1, size);
+        Pageable pageable = (Pageable) PageRequest.of(page - 1, size);//1
         CompanyResponseView companyResponseView = new CompanyResponseView();
         companyResponseView.setCompanyResponses(view(search(text,pageable)));
         return companyResponseView;

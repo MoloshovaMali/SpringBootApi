@@ -2,75 +2,75 @@ package peaksoft.springbootapi.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import peaksoft.springbootapi.dto.StudentRequest;
+import peaksoft.springbootapi.dto.StudentResponse;
 import peaksoft.springbootapi.dto.UserRequest;
 import peaksoft.springbootapi.dto.UserResponse;
+import peaksoft.springbootapi.entity.Group;
 import peaksoft.springbootapi.entity.Role;
 import peaksoft.springbootapi.entity.User;
+import peaksoft.springbootapi.repository.GroupRepository;
 import peaksoft.springbootapi.repository.UserRepository;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class StudentService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-
-    public UserResponse create(UserRequest request) {
+    private final GroupRepository groupRepository;
+    public UserResponse registration(UserRequest request){
         User user = new User();
-        user.setUserName(request.getUsername());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setEmail(request.getEmail());
+        user.setFirstName(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(Role.STUDENT);
+        return UserResponse.builder().id(user.getId())
+                .username(user.getUsername())
+                .roleName(user.getRole().name()).build();
+    }
+    public StudentResponse changeRole(Long userId, ChangeRoleRequest request){
+        User user = userRepository.findById(userId).get();
         user.setRole(Role.valueOf(request.getRoleName()));
-        user.setLocalDate(LocalDate.now());
         userRepository.save(user);
         return mapToResponse(user);
     }
-
-    public UserResponse mapToResponse(User user) {
-        return UserResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
+    public StudentResponse mapToResponse(User user){
+        return StudentResponse.builder()
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
                 .roleName(user.getRole().name())
-                .localDate(user.getLocalDate()).build();
-    }
+                .build();
 
-    public List<UserResponse> getAll() {
-        List<UserResponse> userResponses = new ArrayList<>();
+    }
+    public List<StudentResponse> getAll(){
+        List<StudentResponse> studentResponses = new ArrayList<>();
         for (User user : userRepository.findAll()) {
-            userResponses.add(mapToResponse(user));
+            studentResponses.add(mapToResponse(user));
         }
-        return userResponses;
+        return studentResponses;
     }
-
-    public UserResponse getUserById(Long id) {
-        User user = userRepository.findById(id).get();
+    public StudentResponse getUserById(Long userId){
+        User user = userRepository.findById(userId).get();
         return mapToResponse(user);
     }
 
-    public UserResponse update(Long userId, UserRequest request) {
+    public StudentResponse update(Long userId, StudentRequest request){
         User user = userRepository.findById(userId).get();
-        user.setUserName(request.getUsername());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
-        user.setRole(Role.valueOf(request.getRoleName()));
+        Group group = groupRepository.findById(request.getGroupId()).get();
+        user.setGroup(group);
         userRepository.save(user);
         return mapToResponse(user);
     }
-
-    public String delete(Long userId) {
-        userRepository.deleteById(userId);
-        return "Successfully deleted user with id: " + userId;
+    public String delete(Long studentId){
+        userRepository.deleteById(studentId);
+        return "Successfully deleted student with id: "+studentId;
     }
 }
