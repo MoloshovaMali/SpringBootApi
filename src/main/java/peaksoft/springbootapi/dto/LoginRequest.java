@@ -10,5 +10,6 @@ public class LoginRequest {
     private String jwt;
     private String username;
     private String password;
+    private String email;
 
 }

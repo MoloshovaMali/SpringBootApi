@@ -1,20 +1,24 @@
 package peaksoft.springbootapi.entity;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-
+import java.util.List;
 
 @Entity
 @Table(name = "courses")
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@Getter
+@Setter
+
 public class Course {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,17 +29,19 @@ public class Course {
         private String durationMonth;
         @CreatedDate
         private LocalDate localDate;
-        @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
-        @JoinColumn(name = "company_id")
-        private Company company;
         private Boolean isActive = true;
         private Boolean isDeleted = false;
-        //    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.REFRESH})
-//    @JoinTable(name = "courses_groups",
-//            joinColumns = @JoinColumn(name ="courses_id"),
-//            inverseJoinColumns = @JoinColumn(name = "groups_id"))
-//    private List<Group> groups;
-        @OneToOne(cascade = CascadeType.ALL, mappedBy = "course")
+
+        @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH})
+        @JoinColumn(name = "company_id")
+        private Company company;
+
+        @ManyToMany(cascade = {CascadeType.ALL}, mappedBy = "courses")
+        @JsonIgnore
+        private List<Group> groups;
+
+
+        @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "course")
         @JsonIgnore
         private User teacher;
 }

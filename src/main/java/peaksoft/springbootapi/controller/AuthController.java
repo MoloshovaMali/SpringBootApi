@@ -13,32 +13,40 @@ import peaksoft.springbootapi.dto.*;
 import peaksoft.springbootapi.entity.User;
 import peaksoft.springbootapi.repository.UserRepository;
 import peaksoft.springbootapi.security.jwt.JwtTokenUtil;
+import peaksoft.springbootapi.service.StudentService;
+import peaksoft.springbootapi.service.UserService;
+
 
 @RestController
-@RequestMapping("/api/jwt")
 @RequiredArgsConstructor
+@RequestMapping("/api/jwt")
 @Tag(name = "Auth Api")
 public class AuthController {
-    private final UserService userService;
+
     private final JwtTokenUtil jwtTokenUtil;
     private final UserRepository userRepository;
+    private  final UserService userService;
+
     private final LoginMapper loginMapper;
+
     private final AuthenticationManager authenticationManager;
 
-    @PostMapping("signup")
-    @Operation(summary = "Sign up",description = "User can register")
+    @PostMapping("sign-up")
+    @Operation(summary = "Sing up",description = "User can register")
     public UserResponse signUp(@RequestBody UserRequest userRequest) {
         return userService.create(userRequest);
-
     }
+
     @PostMapping("sign-in")
-    @Operation(summary = "Sign in",description = "User can sign in")
-    public LoginResponse signInI(@RequestBody LoginRequest loginRequest){
-        UsernamePasswordAuthenticationToken token=new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),loginRequest.getPassword());
+    @Operation(summary = "Sign in",description ="User can sign in")
+    public LoginResponse signIn(@RequestBody LoginRequest loginRequest) {
+        UsernamePasswordAuthenticationToken token =
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
         authenticationManager.authenticate(token);
-        User user=userRepository.findByUserName(token.getName()).get();
-        return loginMapper.loginView(jwtTokenUtil.generateToken(user),"Successfully",user);
 
+        User user = userRepository.findByEmail(token.getName()).get();
+        return loginMapper.loginView(jwtTokenUtil.generateToken(user), "successful", user);
     }
+
 
 }

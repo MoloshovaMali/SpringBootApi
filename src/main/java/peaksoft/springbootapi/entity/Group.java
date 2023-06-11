@@ -1,16 +1,20 @@
 package peaksoft.springbootapi.entity;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 @Table(name = "groups")
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @ToString
 public class Group {
     @Id
@@ -22,8 +26,20 @@ public class Group {
     private String dateOfStart;
     @Column(name = "date_of_finish")
     private String dateOfFinish;
-    //    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.REFRESH} ,mappedBy = "groups")
-//    private List<Course> courses;
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "group")
+//    @CreatedDate
+//    private LocalDate localDate;
+//    private  Boolean isActive=true;
+//    private  Boolean isDeleted=false;
+//    @Transient
+//    private Long courseId;
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH,CascadeType.DETACH,CascadeType.PERSIST})
+    @JoinTable(name = "groups_courses",
+            joinColumns = @JoinColumn(name = "groups_id"),
+            inverseJoinColumns = @JoinColumn(name = "courses_id"))
+    private List<Course> courses;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "group")
+    @JsonIgnore
     private List<User> students;
+
 }

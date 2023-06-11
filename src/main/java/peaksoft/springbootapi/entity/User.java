@@ -28,16 +28,19 @@ public class User implements UserDetails {
     private String lastName;
     private String email;
     private String password;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "study_formation")
+    private StudyFormation studyFormation;
+    @CreatedDate
+    private LocalDate localDate;
+    @Enumerated(EnumType.STRING)
+    private Role role;
     @OneToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name = "course_id")
     private Course course;
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "group_id")
     private Group group;
-    @CreatedDate
-    private LocalDate createdDate;
-    @Enumerated(EnumType.STRING)
-    private Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

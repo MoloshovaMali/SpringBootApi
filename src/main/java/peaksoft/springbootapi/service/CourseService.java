@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import peaksoft.springbootapi.dto.CourseRequest;
 import peaksoft.springbootapi.dto.CourseResponse;
-import peaksoft.springbootapi.dto.CourseResponseView;
 import peaksoft.springbootapi.entity.Company;
 import peaksoft.springbootapi.entity.Course;
 import peaksoft.springbootapi.repository.CompanyRepository;
@@ -70,22 +69,22 @@ public class CourseService {
         courseResponse.setIsDeleted(course.getIsDeleted());
         return courseResponse;
     }
-    public List<CourseResponse> view (List<Course>courses){
-        List<CourseResponse> courseResponses = new ArrayList<>();
-        for (Course course:courses){
-            courseResponses.add(mapToResponse(course));
-        }
-        return courseResponses;
-    }
-    public CourseResponseView searchAndPagination(String text, int page, int size){
-        Pageable pageable= PageRequest.of(page-1,size);
-        CourseResponseView courseResponseView = new CourseResponseView();
-        courseResponseView.setCourseResponses(view(search(text,pageable)));
-        return courseResponseView;
-    }
+//    public List<CourseResponse> view (List<Course>courses){
+//        List<CourseResponse> courseResponses = new ArrayList<>();
+//        for (Course course:courses){
+//            courseResponses.add(mapToResponse(course));
+//        }
+//        return courseResponses;
+//    }
+//    public CourseResponseView searchAndPagination(String text, int page, int size){
+//        Pageable pageable= PageRequest.of(page-1,size);
+//        CourseResponseView courseResponseView = new CourseResponseView();
+//        courseResponseView.setCourseResponses(view(search(text,pageable)));
+//        return courseResponseView;
+//    }
 
-    private List<Course> search(String text, Pageable pageable){
-        String name = text ==null?"": text;
-        return courseRepository.searchAndPagination(name.toUpperCase(), (java.awt.print.Pageable) pageable);
-    }
+//    private List<Course> search(String text, Pageable pageable){
+//        String name = text ==null?"": text;
+//        return courseRepository.searchAndPagination(name.toUpperCase(), (java.awt.print.Pageable) pageable);
+//    }
 }

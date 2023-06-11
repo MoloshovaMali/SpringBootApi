@@ -30,7 +30,7 @@ public class CompanyController {
         return companyService.getCompanyById(id);
     }
     @PostMapping
-    @Operation(summary = "Create",description = "Admin can create new Admin")
+    @Operation(summary = "Create",description = "Admin can create new Company")
     public CompanyResponse save(@RequestBody CompanyRequest companyRequest){
         return companyService.saveCompany(companyRequest);
     }
@@ -41,7 +41,7 @@ public class CompanyController {
     }
     @DeleteMapping("{id}")
     @Operation(summary = "Delete",description = "Admin can delete Company by id")
-    private String  delete(@PathVariable("id")Long id){
+    public String  delete(@PathVariable("id")Long id){
         companyService.deleterCompany(id);
         return "Successfully deleted Company with id: "+id;
     }
